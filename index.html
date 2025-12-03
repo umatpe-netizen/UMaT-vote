@@ -1,0 +1,1380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMaT Voting System | Student Registration & Voting</title>
+    <style>
+        :root {
+            --umat-blue: #003366;
+            --umat-gold: #FFD700;
+            --primary-dark: #001F3F;
+            --primary-light: #0066CC;
+            --success: #28A745;
+            --danger: #DC3545;
+            --warning: #FFC107;
+            --light: #F8F9FA;
+            --dark: #212529;
+            --gray: #6C757D;
+            --shadow-lg: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #003366 0%, #0055AA 100%);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+        
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--umat-blue) 100%);
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+            border-bottom: 5px solid var(--umat-gold);
+        }
+        
+        .umat-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .umat-logo {
+            width: 70px;
+            height: 70px;
+            background: var(--umat-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--primary-dark);
+            border: 4px solid white;
+        }
+        
+        .brand-text h1 {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        
+        .brand-text .tagline {
+            font-size: 14px;
+            opacity: 0.9;
+            font-style: italic;
+            color: var(--umat-gold);
+        }
+        
+        .motto {
+            font-size: 16px;
+            color: var(--umat-gold);
+            font-weight: 600;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px solid rgba(255, 215, 0, 0.2);
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            min-height: 800px;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: linear-gradient(to bottom, #001F3F, #003366);
+            padding: 30px 0;
+            border-right: 4px solid var(--umat-gold);
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 25px;
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s;
+            border-left: 4px solid transparent;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-item:hover {
+            background: rgba(255, 215, 0, 0.2);
+            color: var(--umat-gold);
+            border-left-color: var(--umat-gold);
+        }
+        
+        .nav-item.active {
+            background: rgba(255, 215, 0, 0.3);
+            color: var(--umat-gold);
+            border-left-color: var(--umat-gold);
+        }
+        
+        .nav-icon {
+            font-size: 20px;
+            width: 30px;
+            text-align: center;
+        }
+        
+        .content-area {
+            flex: 1;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+        
+        /* Forms */
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 14px 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: var(--umat-blue);
+            box-shadow: 0 0 0 3px rgba(0, 51, 102, 0.1);
+        }
+        
+        .form-control.error {
+            border-color: var(--danger);
+        }
+        
+        .error-message {
+            color: var(--danger);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        .info-message {
+            color: var(--umat-blue);
+            font-size: 14px;
+            margin-top: 5px;
+            font-style: italic;
+        }
+        
+        /* Buttons */
+        .btn {
+            padding: 14px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-umat {
+            background: var(--umat-blue);
+            color: white;
+        }
+        
+        .btn-umat:hover {
+            background: #002244;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 51, 102, 0.3);
+        }
+        
+        .btn-block {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        /* Dashboard */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: transform 0.3s;
+            border-top: 5px solid var(--umat-blue);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        /* Voting ID Card */
+        .voting-id-card {
+            background: linear-gradient(135deg, var(--umat-blue), var(--primary-dark));
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+            border: 3px solid var(--umat-gold);
+        }
+        
+        .voting-id-number {
+            font-size: 36px;
+            font-weight: 900;
+            letter-spacing: 3px;
+            color: var(--umat-gold);
+            margin: 20px 0;
+            font-family: monospace;
+        }
+        
+        /* Toast */
+        .toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            animation: slideIn 0.3s ease;
+            min-width: 300px;
+            border-left: 4px solid var(--success);
+            z-index: 1001;
+        }
+        
+        .toast.error {
+            border-left-color: var(--danger);
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Loading */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--umat-blue);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* User Info */
+        .user-info {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login/Registration Page -->
+    <div class="container" id="loginContainer">
+        <div class="header">
+            <div class="umat-brand">
+                <div class="umat-logo">UMaT</div>
+                <div class="brand-text">
+                    <h1>UNIVERSITY OF MINES AND TECHNOLOGY</h1>
+                    <div class="tagline">Tarkwa, Ghana | Student Voting Registration</div>
+                </div>
+            </div>
+            <div class="motto">"Knowledge, Truth and Excellence"</div>
+        </div>
+        
+        <div style="padding: 50px;">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <h2 style="color: var(--umat-blue); margin-bottom: 10px;">Student Registration Portal</h2>
+                <p style="color: var(--gray);">Register with your UMaT details to get your Voting ID</p>
+            </div>
+            
+            <div class="form-container">
+                <div id="registerSection">
+                    <h3 style="color: var(--umat-blue); margin-bottom: 25px;">Create Your Voting Account</h3>
+                    
+                    <form id="registrationForm">
+                        <!-- Personal Information -->
+                        <div style="background: #F8F9FA; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                            <h4 style="color: var(--dark); margin-bottom: 20px;">📝 Personal Information</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-control" id="fullName" 
+                                       placeholder="Enter your full name (e.g., John Adams)"
+                                       required>
+                                <div class="error-message" id="nameError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Student Index Number</label>
+                                <input type="text" class="form-control" id="indexNumber" 
+                                       placeholder="e.g., SPE.41.009.002.22"
+                                       pattern="[A-Z]{2,3}\.[0-9]{2}\.[0-9]{3}\.[0-9]{3}\.[0-9]{2}"
+                                       title="Format: SPE.41.009.002.22"
+                                       required>
+                                <div class="info-message">Format: Department.Year.Programme.StudentNumber.AdmissionYear</div>
+                                <div class="error-message" id="indexError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">UMaT Student Email</label>
+                                <input type="email" class="form-control" id="studentEmail" 
+                                       placeholder="e.g., PE-eeadams4322@st.umat.edu.gh"
+                                       pattern="[A-Z]{2}-[a-z]{2}[a-z]+[0-9]{4}@st\.umat\.edu\.gh"
+                                       title="Format: PE-eeadams4322@st.umat.edu.gh"
+                                       required>
+                                <div class="info-message">Format: DepartmentCode-usernameYYYY@st.umat.edu.gh</div>
+                                <div class="error-message" id="emailError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" class="form-control" id="phoneNumber" 
+                                       placeholder="e.g., 0241234567"
+                                       pattern="[0][0-9]{9}"
+                                       title="10-digit Ghana phone number starting with 0"
+                                       required>
+                                <div class="error-message" id="phoneError"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Academic Information -->
+                        <div style="background: #F8F9FA; padding: 25px; border-radius: 10px; margin-bottom: 25px;">
+                            <h4 style="color: var(--dark); margin-bottom: 20px;">🎓 Academic Information</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Select Faculty/School</label>
+                                <select class="form-control" id="facultySelect" required>
+                                    <option value="">-- Select Faculty/School --</option>
+                                    <option value="School of Petroleum Studies">School of Petroleum Studies</option>
+                                    <option value="School of Railways & Infrastructure Development">School of Railways & Infrastructure Development</option>
+                                    <option value="Faculty of Mining & Mineral Technology">Faculty of Mining & Mineral Technology</option>
+                                    <option value="Faculty of Engineering">Faculty of Engineering</option>
+                                    <option value="School of Computing & Informatics">School of Computing & Informatics</option>
+                                    <option value="Faculty of Geosciences & Environmental Studies">Faculty of Geosciences & Environmental Studies</option>
+                                    <option value="Faculty of Integrated Management Science">Faculty of Integrated Management Science</option>
+                                    <option value="School of Safety & Environmental Studies">School of Safety & Environmental Studies</option>
+                                </select>
+                                <div class="error-message" id="facultyError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Select Department</label>
+                                <select class="form-control" id="departmentSelect" required disabled>
+                                    <option value="">-- First select Faculty --</option>
+                                </select>
+                                <div class="error-message" id="departmentError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Select Programme</label>
+                                <select class="form-control" id="programmeSelect" required disabled>
+                                    <option value="">-- First select Department --</option>
+                                </select>
+                                <div class="error-message" id="programmeError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Level</label>
+                                <select class="form-control" id="levelSelect" required>
+                                    <option value="">-- Select Level --</option>
+                                    <option value="100">100 Level</option>
+                                    <option value="200">200 Level</option>
+                                    <option value="300">300 Level</option>
+                                    <option value="400">400 Level</option>
+                                    <option value="500">500 Level</option>
+                                </select>
+                                <div class="error-message" id="levelError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Hall of Residence</label>
+                                <select class="form-control" id="hallSelect" required>
+                                    <option value="">-- Select Hall --</option>
+                                    <option value="Mining Hall">Mining Hall</option>
+                                    <option value="Petroleum Hall">Petroleum Hall</option>
+                                    <option value="Engineering Hall">Engineering Hall</option>
+                                    <option value="Computer Hall">Computer Hall</option>
+                                    <option value="Railway Hall">Railway Hall</option>
+                                    <option value="Essikado Hall">Essikado Hall</option>
+                                    <option value="Technology Hall">Technology Hall</option>
+                                    <option value="Main Hostel">Main Hostel</option>
+                                </select>
+                                <div class="error-message" id="hallError"></div>
+                            </div>
+                        </div>
+                        
+                        <!-- Security -->
+                        <div style="background: #F8F9FA; padding: 25px; border-radius: 10px; margin-bottom: 30px;">
+                            <h4 style="color: var(--dark); margin-bottom: 20px;">🔐 Account Security</h4>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Create Password</label>
+                                <input type="password" class="form-control" id="password" 
+                                       placeholder="Minimum 8 characters"
+                                       minlength="8"
+                                       required>
+                                <div class="error-message" id="passwordError"></div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">Confirm Password</label>
+                                <input type="password" class="form-control" id="confirmPassword" 
+                                       placeholder="Re-enter your password"
+                                       required>
+                                <div class="error-message" id="confirmPasswordError"></div>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-umat btn-block">
+                            <span>📝</span> Register & Get Voting ID
+                        </button>
+                        
+                        <div style="text-align: center; margin-top: 25px;">
+                            <p style="color: var(--gray);">Already have an account? 
+                                <a href="#" onclick="showLoginForm()" style="color: var(--umat-blue); font-weight: bold; cursor: pointer;">
+                                    Login here
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Login Form (Hidden Initially) -->
+                <div id="loginSection" style="display: none;">
+                    <h3 style="color: var(--umat-blue); margin-bottom: 25px;">Login to Voting System</h3>
+                    
+                    <form id="loginForm">
+                        <div class="form-group">
+                            <label class="form-label">Voting ID or Email</label>
+                            <input type="text" class="form-control" id="loginIdentifier" 
+                                   placeholder="UMAT901200001 or PE-eeadams4322@st.umat.edu.gh"
+                                   required>
+                            <div class="error-message" id="loginIdError"></div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <input type="password" class="form-control" id="loginPassword" 
+                                   placeholder="Enter your password"
+                                   required>
+                            <div class="error-message" id="loginPasswordError"></div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-umat btn-block">
+                            <span>🔐</span> Login to Voting System
+                        </button>
+                        
+                        <div style="text-align: center; margin-top: 25px;">
+                            <p style="color: var(--gray);">Don't have an account? 
+                                <a href="#" onclick="showRegisterForm()" style="color: var(--umat-blue); font-weight: bold; cursor: pointer;">
+                                    Register here
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Application -->
+    <div class="container" id="mainContainer" style="display: none;">
+        <div class="header">
+            <div class="umat-brand">
+                <div class="umat-logo">UMaT</div>
+                <div class="brand-text">
+                    <h1>UMaT STUDENT VOTING SYSTEM</h1>
+                    <div class="tagline">Your Voice Matters - Vote Now</div>
+                </div>
+            </div>
+            <div class="motto">"Secure Digital Elections"</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="sidebar">
+                <a href="#" class="nav-item active" onclick="showPage('dashboard')">
+                    <span class="nav-icon">📊</span>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('voting')">
+                    <span class="nav-icon">🗳️</span>
+                    <span>Vote Now</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('profile')">
+                    <span class="nav-icon">👤</span>
+                    <span>My Profile</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('idcard')">
+                    <span class="nav-icon">🆔</span>
+                    <span>My Voting ID</span>
+                </a>
+                <a href="#" class="nav-item" onclick="showPage('results')">
+                    <span class="nav-icon">📈</span>
+                    <span>Live Results</span>
+                </a>
+                <a href="#" class="nav-item" onclick="logout()">
+                    <span class="nav-icon">🚪</span>
+                    <span>Logout</span>
+                </a>
+            </div>
+            
+            <div class="content-area">
+                <!-- Dashboard -->
+                <div class="page active" id="dashboardPage">
+                    <div style="margin-bottom: 30px;">
+                        <h2 style="color: var(--umat-blue); margin-bottom: 10px;">Student Dashboard</h2>
+                        <p style="color: var(--gray);" id="dashboardGreeting"></p>
+                    </div>
+                    
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div style="font-size: 40px;">🗳️</div>
+                            <div>
+                                <h3 id="activeElections">2</h3>
+                                <p>Active Elections</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div style="font-size: 40px;">✅</div>
+                            <div>
+                                <h3 id="votesCast">0</h3>
+                                <p>Your Votes</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div style="font-size: 40px;">⏰</div>
+                            <div>
+                                <h3 id="timeRemaining">3d 12h</h3>
+                                <p>Time Remaining</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-card">
+                            <div style="font-size: 40px;">👥</div>
+                            <div>
+                                <h3 id="totalVoters">0</h3>
+                                <p>Registered Voters</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="user-info">
+                        <h3 style="color: var(--umat-blue); margin-bottom: 20px;">🎓 Student Information</h3>
+                        <div id="studentInfo">
+                            <!-- Student details will load here -->
+                        </div>
+                    </div>
+                    
+                    <div style="background: white; padding: 25px; border-radius: 15px; margin-top: 30px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <h3 style="color: var(--umat-blue); margin-bottom: 20px;">📢 Announcements</h3>
+                        <ul style="color: var(--dark); line-height: 1.8;">
+                            <li>SRC Elections 2024 voting period: Dec 10-15, 2024</li>
+                            <li>Faculty Representative elections are now active</li>
+                            <li>Results will be announced live on December 16th</li>
+                            <li>Remember to keep your Voting ID confidential</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <!-- Voting ID Card -->
+                <div class="page" id="idcardPage">
+                    <div style="margin-bottom: 30px;">
+                        <h2 style="color: var(--umat-blue); margin-bottom: 10px;">Your Voting ID Card</h2>
+                        <p style="color: var(--gray);">This is your unique identification for voting</p>
+                    </div>
+                    
+                    <div class="voting-id-card">
+                        <h3 style="color: white; margin-bottom: 10px;">UMaT VOTING IDENTIFICATION</h3>
+                        <p style="opacity: 0.9;">Keep this ID secure. It's required for all voting activities.</p>
+                        
+                        <div class="voting-id-number" id="votingIdDisplay">
+                            <!-- Voting ID will appear here -->
+                        </div>
+                        
+                        <div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                            <p><strong>Student:</strong> <span id="idStudentName"></span></p>
+                            <p><strong>Index Number:</strong> <span id="idIndexNumber"></span></p>
+                            <p><strong>Programme:</strong> <span id="idProgramme"></span></p>
+                            <p><strong>Registration Date:</strong> <span id="idRegDate"></span></p>
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px; justify-content: center; margin-top: 25px;">
+                            <button class="btn" onclick="printVotingID()" style="background: var(--umat-gold); color: var(--umat-blue);">
+                                <span>🖨️</span> Print ID
+                            </button>
+                            <button class="btn" onclick="copyVotingID()" style="background: white; color: var(--umat-blue);">
+                                <span>📋</span> Copy ID
+                            </button>
+                        </div>
+                        
+                        <p style="margin-top: 25px; font-size: 14px; opacity: 0.8;">
+                            🔒 This ID is unique to you. Do not share it with anyone.
+                        </p>
+                    </div>
+                </div>
+                
+                <!-- Profile Page -->
+                <div class="page" id="profilePage">
+                    <div style="margin-bottom: 30px;">
+                        <h2 style="color: var(--umat-blue); margin-bottom: 10px;">My Profile</h2>
+                        <p style="color: var(--gray);">View and manage your student information</p>
+                    </div>
+                    
+                    <div id="profileDetails">
+                        <!-- Profile details will load here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div id="toastContainer"></div>
+    
+    <!-- Loading Modal -->
+    <div style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: center; justify-content: center;" id="loadingModal">
+        <div style="background: white; padding: 40px; border-radius: 15px; text-align: center;">
+            <div class="spinner"></div>
+            <p style="margin-top: 20px; color: var(--umat-blue); font-weight: 600;">Processing...</p>
+        </div>
+    </div>
+
+    <script>
+        // UMaT Academic Structure Database
+        const UMAT_ACADEMIC_STRUCTURE = {
+            // School of Petroleum Studies
+            "School of Petroleum Studies": {
+                departments: {
+                    "Petroleum Engineering": [
+                        "BSc Petroleum Engineering",
+                        "MSc Petroleum Engineering",
+                        "PhD Petroleum Engineering"
+                    ],
+                    "Geological Engineering": [
+                        "BSc Geological Engineering",
+                        "MSc Geological Engineering"
+                    ],
+                    "Geophysical Engineering": [
+                        "BSc Geophysical Engineering",
+                        "MSc Geophysics"
+                    ],
+                    "Petroleum Geoscience": [
+                        "BSc Petroleum Geoscience"
+                    ]
+                }
+            },
+            // School of Railways & Infrastructure Development
+            "School of Railways & Infrastructure Development": {
+                departments: {
+                    "Railway Engineering": [
+                        "BSc Railway Engineering",
+                        "Diploma in Railway Engineering"
+                    ],
+                    "Transportation Engineering": [
+                        "BSc Transportation Engineering",
+                        "MSc Transportation Engineering"
+                    ],
+                    "Infrastructure Development": [
+                        "BSc Infrastructure Development"
+                    ],
+                    "Logistics & Supply Chain": [
+                        "BSc Logistics & Supply Chain Management"
+                    ]
+                }
+            },
+            // Faculty of Mining & Mineral Technology
+            "Faculty of Mining & Mineral Technology": {
+                departments: {
+                    "Mining Engineering": [
+                        "BSc Mining Engineering",
+                        "MSc Mining Engineering",
+                        "PhD Mining Engineering"
+                    ],
+                    "Mineral Engineering": [
+                        "BSc Mineral Engineering",
+                        "MSc Mineral Processing"
+                    ],
+                    "Geomatic Engineering": [
+                        "BSc Geomatic Engineering"
+                    ],
+                    "Mine Surveying": [
+                        "BSc Mine Surveying",
+                        "HND Mine Surveying"
+                    ]
+                }
+            },
+            // Faculty of Engineering
+            "Faculty of Engineering": {
+                departments: {
+                    "Electrical & Electronics Engineering": [
+                        "BSc Electrical & Electronics Engineering"
+                    ],
+                    "Mechanical Engineering": [
+                        "BSc Mechanical Engineering"
+                    ],
+                    "Computer Science & Engineering": [
+                        "BSc Computer Science & Engineering"
+                    ],
+                    "Civil Engineering": [
+                        "BSc Civil Engineering"
+                    ],
+                    "Materials Engineering": [
+                        "BSc Materials Engineering"
+                    ]
+                }
+            },
+            // School of Computing & Informatics
+            "School of Computing & Informatics": {
+                departments: {
+                    "Computer Science": [
+                        "BSc Computer Science",
+                        "MSc Computer Science"
+                    ],
+                    "Information Technology": [
+                        "BSc Information Technology"
+                    ],
+                    "Software Engineering": [
+                        "BSc Software Engineering"
+                    ],
+                    "Cyber Security": [
+                        "BSc Cyber Security"
+                    ],
+                    "Data Science": [
+                        "BSc Data Science"
+                    ]
+                }
+            }
+        };
+
+        // Local Storage for Student Database
+        const STORAGE_KEYS = {
+            STUDENTS: 'umat_voting_students',
+            VOTES: 'umat_voting_votes',
+            LAST_ID: 'umat_last_voting_id'
+        };
+
+        // Application State
+        let currentStudent = null;
+        let votingIDCounter = 901200001; // Starting ID number
+
+        // Initialize the application
+        function initializeApp() {
+            // Load existing student database
+            loadStudentDatabase();
+            
+            // Set up faculty-department-programme cascading selects
+            setupCascadingSelects();
+            
+            // Set up form event listeners
+            setupFormListeners();
+            
+            // Load last voting ID from localStorage
+            const lastID = localStorage.getItem(STORAGE_KEYS.LAST_ID);
+            if (lastID) {
+                votingIDCounter = parseInt(lastID) + 1;
+            }
+        }
+
+        // Setup faculty-department-programme cascading selects
+        function setupCascadingSelects() {
+            const facultySelect = document.getElementById('facultySelect');
+            const departmentSelect = document.getElementById('departmentSelect');
+            const programmeSelect = document.getElementById('programmeSelect');
+            
+            // Faculty change handler
+            facultySelect.addEventListener('change', function() {
+                const faculty = this.value;
+                departmentSelect.innerHTML = '<option value="">-- Select Department --</option>';
+                programmeSelect.innerHTML = '<option value="">-- Select Programme --</option>';
+                
+                if (faculty && UMAT_ACADEMIC_STRUCTURE[faculty]) {
+                    departmentSelect.disabled = false;
+                    programmeSelect.disabled = true;
+                    
+                    // Populate departments
+                    const departments = UMAT_ACADEMIC_STRUCTURE[faculty].departments;
+                    for (const dept in departments) {
+                        departmentSelect.innerHTML += `<option value="${dept}">${dept}</option>`;
+                    }
+                } else {
+                    departmentSelect.disabled = true;
+                    programmeSelect.disabled = true;
+                }
+            });
+            
+            // Department change handler
+            departmentSelect.addEventListener('change', function() {
+                const faculty = facultySelect.value;
+                const department = this.value;
+                programmeSelect.innerHTML = '<option value="">-- Select Programme --</option>';
+                
+                if (faculty && department && UMAT_ACADEMIC_STRUCTURE[faculty]) {
+                    programmeSelect.disabled = false;
+                    
+                    // Populate programmes
+                    const programmes = UMAT_ACADEMIC_STRUCTURE[faculty].departments[department];
+                    programmes.forEach(programme => {
+                        programmeSelect.innerHTML += `<option value="${programme}">${programme}</option>`;
+                    });
+                } else {
+                    programmeSelect.disabled = true;
+                }
+            });
+        }
+
+        // Setup form event listeners
+        function setupFormListeners() {
+            // Registration form
+            document.getElementById('registrationForm').addEventListener('submit', handleRegistration);
+            
+            // Login form
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Input validation
+            setupInputValidation();
+        }
+
+        // Handle registration
+        function handleRegistration(e) {
+            e.preventDefault();
+            clearErrors();
+            
+            // Get form values
+            const formData = {
+                fullName: document.getElementById('fullName').value.trim(),
+                indexNumber: document.getElementById('indexNumber').value.trim(),
+                studentEmail: document.getElementById('studentEmail').value.trim(),
+                phoneNumber: document.getElementById('phoneNumber').value.trim(),
+                faculty: document.getElementById('facultySelect').value,
+                department: document.getElementById('departmentSelect').value,
+                programme: document.getElementById('programmeSelect').value,
+                level: document.getElementById('levelSelect').value,
+                hall: document.getElementById('hallSelect').value,
+                password: document.getElementById('password').value,
+                confirmPassword: document.getElementById('confirmPassword').value
+            };
+            
+            // Validate form
+            if (!validateRegistration(formData)) {
+                return;
+            }
+            
+            // Generate Voting ID
+            const votingID = generateVotingID();
+            
+            // Create student object
+            const student = {
+                id: Date.now(), // Unique timestamp ID
+                votingID: votingID,
+                ...formData,
+                registrationDate: new Date().toISOString(),
+                isRegisteredVoter: true,
+                hasVoted: false,
+                votes: []
+            };
+            
+            // Save to database
+            saveStudent(student);
+            
+            // Show success with Voting ID
+            showVotingIDSuccess(votingID, student.fullName);
+        }
+
+        // Validate registration form
+        function validateRegistration(data) {
+            let isValid = true;
+            
+            // Full name validation
+            if (!data.fullName || data.fullName.length < 3) {
+                showError('nameError', 'Please enter your full name');
+                isValid = false;
+            }
+            
+            // Index number validation (SPE.41.009.002.22 format)
+            const indexPattern = /^[A-Z]{2,3}\.[0-9]{2}\.[0-9]{3}\.[0-9]{3}\.[0-9]{2}$/;
+            if (!indexPattern.test(data.indexNumber)) {
+                showError('indexError', 'Invalid index number format. Use: SPE.41.009.002.22');
+                isValid = false;
+            }
+            
+            // Email validation (PE-eeadams4322@st.umat.edu.gh format)
+            const emailPattern = /^[A-Z]{2}-[a-z]{2}[a-z]+[0-9]{4}@st\.umat\.edu\.gh$/;
+            if (!emailPattern.test(data.studentEmail)) {
+                showError('emailError', 'Invalid UMaT email format. Use: PE-eeadams4322@st.umat.edu.gh');
+                isValid = false;
+            }
+            
+            // Check if email already exists
+            const existingStudent = getStudentByEmail(data.studentEmail);
+            if (existingStudent) {
+                showError('emailError', 'This email is already registered');
+                isValid = false;
+            }
+            
+            // Phone validation
+            const phonePattern = /^0[0-9]{9}$/;
+            if (!phonePattern.test(data.phoneNumber)) {
+                showError('phoneError', 'Invalid phone number. Use 10-digit Ghana number starting with 0');
+                isValid = false;
+            }
+            
+            // Faculty validation
+            if (!data.faculty) {
+                showError('facultyError', 'Please select your faculty/school');
+                isValid = false;
+            }
+            
+            // Department validation
+            if (!data.department) {
+                showError('departmentError', 'Please select your department');
+                isValid = false;
+            }
+            
+            // Programme validation
+            if (!data.programme) {
+                showError('programmeError', 'Please select your programme');
+                isValid = false;
+            }
+            
+            // Level validation
+            if (!data.level) {
+                showError('levelError', 'Please select your level');
+                isValid = false;
+            }
+            
+            // Hall validation
+            if (!data.hall) {
+                showError('hallError', 'Please select your hall of residence');
+                isValid = false;
+            }
+            
+            // Password validation
+            if (data.password.length < 8) {
+                showError('passwordError', 'Password must be at least 8 characters');
+                isValid = false;
+            }
+            
+            // Confirm password
+            if (data.password !== data.confirmPassword) {
+                showError('confirmPasswordError', 'Passwords do not match');
+                isValid = false;
+            }
+            
+            return isValid;
+        }
+
+        // Generate unique Voting ID
+        function generateVotingID() {
+            const newID = `UMAT${votingIDCounter}`;
+            votingIDCounter++;
+            
+            // Save last ID to localStorage
+            localStorage.setItem(STORAGE_KEYS.LAST_ID, (votingIDCounter - 1).toString());
+            
+            return newID;
+        }
+
+        // Handle login
+        function handleLogin(e) {
+            e.preventDefault();
+            clearErrors();
+            
+            const identifier = document.getElementById('loginIdentifier').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            
+            // Find student by Voting ID or Email
+            const student = findStudentByIdentifier(identifier);
+            
+            if (!student) {
+                showError('loginIdError', 'Invalid Voting ID or Email');
+                return;
+            }
+            
+            if (student.password !== password) {
+                showError('loginPasswordError', 'Invalid password');
+                return;
+            }
+            
+            // Login successful
+            currentStudent = student;
+            
+            // Show main application
+            document.getElementById('loginContainer').style.display = 'none';
+            document.getElementById('mainContainer').style.display = 'block';
+            
+            // Update UI
+            updateStudentDisplay();
+            showToast(`Welcome back, ${student.fullName}!`, 'success');
+        }
+
+        // Database functions
+        function loadStudentDatabase() {
+            const studentsJSON = localStorage.getItem(STORAGE_KEYS.STUDENTS);
+            return studentsJSON ? JSON.parse(studentsJSON) : [];
+        }
+
+        function saveStudent(student) {
+            const students = loadStudentDatabase();
+            students.push(student);
+            localStorage.setItem(STORAGE_KEYS.STUDENTS, JSON.stringify(students));
+        }
+
+        function getStudentByEmail(email) {
+            const students = loadStudentDatabase();
+            return students.find(s => s.studentEmail.toLowerCase() === email.toLowerCase());
+        }
+
+        function findStudentByIdentifier(identifier) {
+            const students = loadStudentDatabase();
+            
+            // Try to find by Voting ID
+            let student = students.find(s => s.votingID === identifier);
+            
+            // If not found by Voting ID, try by email
+            if (!student) {
+                student = students.find(s => s.studentEmail.toLowerCase() === identifier.toLowerCase());
+            }
+            
+            return student;
+        }
+
+        // Update student display
+        function updateStudentDisplay() {
+            const student = currentStudent;
+            
+            document.getElementById('dashboardGreeting').innerHTML = `
+                Welcome, <strong>${student.fullName}</strong>! You are a ${student.level} Level student in ${student.programme}.
+            `;
+            
+            document.getElementById('studentInfo').innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div>
+                        <p><strong>Student Name:</strong> ${student.fullName}</p>
+                        <p><strong>Index Number:</strong> ${student.indexNumber}</p>
+                        <p><strong>Student Email:</strong> ${student.studentEmail}</p>
+                        <p><strong>Phone Number:</strong> ${student.phoneNumber}</p>
+                    </div>
+                    <div>
+                        <p><strong>Faculty/School:</strong> ${student.faculty}</p>
+                        <p><strong>Department:</strong> ${student.department}</p>
+                        <p><strong>Programme:</strong> ${student.programme}</p>
+                        <p><strong>Level:</strong> ${student.level}</p>
+                        <p><strong>Hall:</strong> ${student.hall}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Update Voting ID display
+            document.getElementById('votingIdDisplay').textContent = student.votingID;
+            document.getElementById('idStudentName').textContent = student.fullName;
+            document.getElementById('idIndexNumber').textContent = student.indexNumber;
+            document.getElementById('idProgramme').textContent = student.programme;
+            document.getElementById('idRegDate').textContent = new Date(student.registrationDate).toLocaleDateString();
+            
+            // Update profile page
+            document.getElementById('profileDetails').innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <h3 style="color: var(--umat-blue); margin-bottom: 20px;">Student Profile Details</h3>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px;">
+                        <div style="background: #F8F9FA; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: var(--dark); margin-bottom: 15px;">Personal Information</h4>
+                            <p><strong>Full Name:</strong> ${student.fullName}</p>
+                            <p><strong>Index Number:</strong> ${student.indexNumber}</p>
+                            <p><strong>Student Email:</strong> ${student.studentEmail}</p>
+                            <p><strong>Phone Number:</strong> ${student.phoneNumber}</p>
+                            <p><strong>Hall of Residence:</strong> ${student.hall}</p>
+                        </div>
+                        
+                        <div style="background: #F8F9FA; padding: 20px; border-radius: 10px;">
+                            <h4 style="color: var(--dark); margin-bottom: 15px;">Academic Information</h4>
+                            <p><strong>Faculty/School:</strong> ${student.faculty}</p>
+                            <p><strong>Department:</strong> ${student.department}</p>
+                            <p><strong>Programme:</strong> ${student.programme}</p>
+                            <p><strong>Level:</strong> ${student.level}</p>
+                            <p><strong>Registration Date:</strong> ${new Date(student.registrationDate).toLocaleDateString()}</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 25px; padding: 20px; background: #E8F4FD; border-radius: 10px; border-left: 4px solid var(--umat-blue);">
+                        <h4 style="color: var(--umat-blue); margin-bottom: 10px;">Voting Information</h4>
+                        <p><strong>Voting ID:</strong> <span style="font-family: monospace; font-weight: bold; color: var(--umat-blue);">${student.votingID}</span></p>
+                        <p><strong>Voter Status:</strong> <span style="color: var(--success); font-weight: bold;">Active</span></p>
+                        <p><strong>Total Votes Cast:</strong> ${student.votes ? student.votes.length : 0}</p>
+                        <p><strong>Last Vote:</strong> ${student.hasVoted ? 'You have voted' : 'Not voted yet'}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Update total voters count
+            const students = loadStudentDatabase();
+            document.getElementById('totalVoters').textContent = students.length;
+        }
+
+        // Show Voting ID success
+        function showVotingIDSuccess(votingID, studentName) {
+            const registerSection = document.getElementById('registerSection');
+            registerSection.innerHTML = `
+                <div style="text-align: center; padding: 40px 20px;">
+                    <div style="font-size: 60px; color: var(--success); margin-bottom: 20px;">✅</div>
+                    <h3 style="color: var(--umat-blue); margin-bottom: 15px;">Registration Successful!</h3>
+                    <p style="color: var(--dark); margin-bottom: 30px;">
+                        Welcome ${studentName}, your registration is complete.
+                    </p>
+                    
+                    <div style="background: linear-gradient(135deg, var(--umat-blue), var(--primary-dark)); 
+                          color: white; padding: 30px; border-radius: 15px; margin: 30px 0; border: 3px solid var(--umat-gold);">
+                        <h4 style="color: var(--umat-gold); margin-bottom: 10px;">YOUR VOTING ID</h4>
+                        <div style="font-size: 32px; font-weight: 900; letter-spacing: 3px; color: var(--umat-gold); 
+                              margin: 20px 0; font-family: monospace; background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px;">
+                            ${votingID}
+                        </div>
+                        <p style="opacity: 0.9; font-size: 14px;">
+                            🔒 Keep this ID secure. You'll need it to login and vote.
+                        </p>
+                    </div>
+                    
+                    <div style="background: #E8F5E9; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid var(--success);">
+                        <h4 style="color: var(--dark); margin-bottom: 10px;">Important Instructions:</h4>
+                        <ul style="text-align: left; color: var(--dark); line-height: 1.6; padding-left: 20px;">
+                            <li>Your Voting ID is <strong>${votingID}</strong></li>
+                            <li>You can login with either your Voting ID or Email</li>
+                            <li>Keep your Voting ID confidential</li>
+                            <li>Use your registered password to login</li>
+                        </ul>
+                    </div>
+                    
+                    <button class="btn btn-umat" onclick="showLoginForm()" style="margin-top: 20px;">
+                        <span>🔐</span> Proceed to Login
+                    </button>
+                </div>
+            `;
+        }
+
+        // Form navigation
+        function showLoginForm() {
+            document.getElementById('registerSection').style.display = 'none';
+            document.getElementById('loginSection').style.display = 'block';
+        }
+
+        function showRegisterForm() {
+            document.getElementById('loginSection').style.display = 'none';
+            document.getElementById('registerSection').style.display = 'block';
+        }
+
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // Find and activate clicked nav item (except logout)
+            if (pageId !== 'logout') {
+                const clickedItem = event.target.closest('.nav-item');
+                if (clickedItem) {
+                    clickedItem.classList.add('active');
+                }
+            }
+            
+            // Show selected page
+            document.getElementById(pageId + 'Page').classList.add('active');
+        }
+
+        // Utility functions
+        function showError(elementId, message) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+            });
+        }
+
+        function setupInputValidation() {
+            // Index number format hint
+            document.getElementById('indexNumber').addEventListener('input', function() {
+                const pattern = /^[A-Z]{2,3}\.[0-9]{2}\.[0-9]{3}\.[0-9]{3}\.[0-9]{2}$/;
+                if (this.value && !pattern.test(this.value)) {
+                    showError('indexError', 'Format: SPE.41.009.002.22');
+                } else {
+                    document.getElementById('indexError').style.display = 'none';
+                }
+            });
+            
+            // Email format hint
+            document.getElementById('studentEmail').addEventListener('input', function() {
+                const pattern = /^[A-Z]{2}-[a-z]{2}[a-z]+[0-9]{4}@st\.umat\.edu\.gh$/;
+                if (this.value && !pattern.test(this.value)) {
+                    showError('emailError', 'Format: PE-eeadams4322@st.umat.edu.gh');
+                } else {
+                    document.getElementById('emailError').style.display = 'none';
+                }
+            });
+            
+            // Password match validation
+            document.getElementById('confirmPassword').addEventListener('input', function() {
+                const password = document.getElementById('password').value;
+                if (this.value && password !== this.value) {
+                    showError('confirmPasswordError', 'Passwords do not match');
+                } else {
+                    document.getElementById('confirmPasswordError').style.display = 'none';
+                }
+            });
+        }
+
+        // Voting ID functions
+        function printVotingID() {
+            const printContent = `
+                <div style="text-align: center; padding: 40px; font-family: Arial, sans-serif;">
+                    <h2 style="color: #003366;">UNIVERSITY OF MINES AND TECHNOLOGY</h2>
+                    <h3 style="color: #003366;">VOTING ID CARD</h3>
+                    <div style="border: 2px solid #003366; padding: 30px; margin: 30px 0; display: inline-block;">
+                        <h4 style="color: #003366;">VOTING IDENTIFICATION NUMBER</h4>
+                        <div style="font-size: 36px; font-weight: bold; color: #003366; margin: 20px 0; letter-spacing: 3px;">
+                            ${currentStudent.votingID}
+                        </div>
+                        <p><strong>Student:</strong> ${currentStudent.fullName}</p>
+                        <p><strong>Index:</strong> ${currentStudent.indexNumber}</p>
+                        <p><strong>Programme:</strong> ${currentStudent.programme}</p>
+                        <p><strong>Valid For:</strong> UMaT Student Elections 2024</p>
+                    </div>
+                    <p style="color: #666; font-size: 12px; margin-top: 20px;">
+                        This is your official UMaT Voting ID. Keep it confidential.
+                    </p>
+                </div>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        }
+
+        function copyVotingID() {
+            const votingID = currentStudent.votingID;
+            navigator.clipboard.writeText(votingID).then(() => {
+                showToast('Voting ID copied to clipboard!', 'success');
+            });
+        }
+
+        // Toast notification
+        function showToast(message, type = "success") {
+            const toastContainer = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = `
+                <span style="font-size: 24px;">${type === 'success' ? '✅' : '❌'}</span>
+                <div>
+                    <div style="font-weight: bold;">${type === 'success' ? 'Success' : 'Error'}</div>
+                    <div style="font-size: 14px; margin-top: 5px;">${message}</div>
+                </div>
+            `;
+            
+            toastContainer.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => toast.remove(), 300);
+            }, 5000);
+        }
+
+        // Logout
+        function logout() {
+            if (confirm("Are you sure you want to logout?")) {
+                currentStudent = null;
+                document.getElementById('mainContainer').style.display = 'none';
+                document.getElementById('loginContainer').style.display = 'block';
+                showLoginForm();
+                showToast("Logged out successfully", "success");
+            }
+        }
+
+        // Initialize application on load
+        window.addEventListener('load', initializeApp);
+    </script>
+</body>
+</html>
